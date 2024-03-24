@@ -1,3 +1,5 @@
+const url = 'http://192.168.1.69:5000';
+
 function saveToFile() {
     var name = document.getElementById('username').value;
     var color = document.getElementById('color').value;
@@ -7,26 +9,55 @@ function saveToFile() {
         color: color
     };
 
-    var jsonData = JSON.stringify(data);
+    // Headers to be sent with the request
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json'); // Example header
+    headers.append('File-Name', name); // Another example header
 
-    var blob = new Blob([jsonData], { type: 'application/json' });
+    // Configuration for the fetch request
+    const requestOptions = {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(data) // Convert data to JSON string
+    };
 
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'data.json';
+    // Making the POST request
+    fetch(url, requestOptions)
+    .then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json(); // Assuming response is JSON
+    })
+    .then(data => {
+    // Handle the response data
+    console.log(data);
+    })
+    .catch(error => {
+    // Handle errors
+    console.error('There was a problem with the fetch operation:', error);
+    });
 
-    document.body.appendChild(a);
-    a.click();
-
-    document.body.removeChild(a);
+    sessionStorage.setItem('file-Name', name);
 
     setTimeout(function(){
         window.location.href = 'second.html';
-    }, 500);
+    }, 200);
 }
 
 function loadFromFile() {
-    fetch('data.json')
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('File-Name', sessionStorage.getItem('file-Name')); // Adding custom header
+    
+    // Configuration for the fetch request
+    const requestOptions = {
+      method: 'GET',
+      headers: headers
+    };
+    
+    // Making the GET request
+    fetch(url, requestOptions)
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
