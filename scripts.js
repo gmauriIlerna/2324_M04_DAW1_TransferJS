@@ -1,4 +1,4 @@
-const url = 'http://192.168.1.69:5000';
+const url = 'https://gmauriilerna.pythonanywhere.com';
 
 function saveToFile() {
     var name = document.getElementById('username').value;
@@ -38,7 +38,7 @@ function saveToFile() {
 
     setTimeout(function(){
         window.location.href = 'second.html';
-    }, 200);
+    }, 500);
 }
 
 function loadFromFile() {
